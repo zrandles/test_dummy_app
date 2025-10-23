@@ -22,8 +22,10 @@ class ExamplesController < ApplicationController
   # Pattern from bull_attributes app - production-tested with 70+ columns
   def calculate_percentile_values
     # List of filterable numeric columns (matches filter_controller.js)
+    # Only use actual database columns for percentile calculations
+    # average_metrics is a virtual column (method) and can't be queried
     filterable_columns = %w[
-      priority score complexity speed quality average_metrics
+      priority score complexity speed quality
     ]
 
     percentiles = {}
