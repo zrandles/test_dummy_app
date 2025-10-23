@@ -1,46 +1,31 @@
-# Territory Game
+# Golden Deployment - Rails Template
 
-A massive-scale persistent territory control game with strategic rally points, 2:1 combat mechanics, and smart bot AI.
+**The definitive template for all new Rails apps in the zac_ecosystem.**
 
-**Repository**: https://github.com/zrandles/territory_game  
-**Status**: Playable prototype (v0.1.0)
+This app demonstrates every reusable pattern, properly configured for deployment, and ready to clone for new projects.
 
----
+## Purpose
 
-## Quick Start
+1. **Template for New Apps** - Copy this app to start new projects with all fixes included
+2. **Living Documentation** - See working examples of all our patterns
+3. **Testing Ground** - Test gem upgrades and deployment changes here first
+4. **Deployment Smoke Test** - Always deployed to verify infrastructure health
+
+## Production URL
+
+http://24.199.71.69/golden_deployment
+
+## Quick Start - Creating New Apps
 
 ```bash
-git clone git@github.com:zrandles/territory_game.git
-cd territory_game
-bundle install
-bin/rails db:setup
-bin/dev           # Start Rails + Tailwind
-bin/tick_loop     # Start game loop (separate terminal)
+cd ~/zac_ecosystem/rails-deploy-tools
+ruby new_rails_app.rb my_new_app
+
+# This automatically:
+# 1. Copies golden_deployment
+# 2. Replaces app name throughout all configs
+# 3. Generates new master.key
+# 4. Initializes git repo
 ```
 
-Visit **http://localhost:3000/territory_game**
-
----
-
-## Gameplay
-
-- **2 Factions** (Red vs Blue), 10 players each
-- **Arrow keys** to move on 10×20 grid
-- **Capture rally points** (★) worth 3x
-- **First to 60% control wins**
-- **2:1 combat**: Outnumbered? Respawn at rally point
-- **Smart bots**: Prioritize rally points automatically
-
-See [docs/SESSION_2025_10_22.md](docs/SESSION_2025_10_22.md) for full details and roadmap.
-
----
-
-## Tech Stack
-
-Rails 8 • Ruby 3.3.4 • Tailwind CSS • Solid Queue • SQLite
-
----
-
-## License
-
-MIT
+See full documentation in `docs/` folder.
