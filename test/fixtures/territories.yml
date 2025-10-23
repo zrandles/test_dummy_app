@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  x: 1
+  'y': 1
+  faction: one
+  player_count: 1
+
+two:
+  x: 1
+  'y': 1
+  faction: two
+  player_count: 1

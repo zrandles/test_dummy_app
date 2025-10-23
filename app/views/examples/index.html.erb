@@ -1,0 +1,458 @@
+<%#
+  GOLDEN DEPLOYMENT - Rails Template
+  This view demonstrates all reusable UI patterns across our Rails apps.
+
+  Key features:
+  - Advanced table filtering with dual-handle sliders
+  - Column visibility management (hidden/shown/featured)
+  - Filter vs Elimination modes
+  - LocalStorage persistence
+  - Status/category badges
+  - Responsive design
+%>
+
+<% content_for :head do %>
+  <style>
+    /* Advanced Table Filter Styles - Adapted from bull_attributes */
+
+    /* Modal styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-content {
+      background: white;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 1200px;
+      max-height: 90vh;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    .modal-header {
+      padding: 20px;
+      border-bottom: 1px solid #e9ecef;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-body {
+      padding: 20px;
+      max-height: calc(90vh - 140px);
+      overflow-y: auto;
+    }
+    .modal-footer {
+      padding: 20px;
+      border-top: 1px solid #e9ecef;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    .column-panel {
+      flex: 1;
+      min-width: 200px;
+      background: white;
+      border: 1px solid #e9ecef;
+      border-radius: 4px;
+      padding: 10px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    .column-panel h3 {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #666;
+      padding: 8px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid #e9ecef;
+    }
+
+    .category-group {
+      margin-bottom: 16px;
+    }
+    .category-header {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #9ca3af;
+      letter-spacing: 0.5px;
+      padding: 8px 12px 4px 12px;
+      margin-bottom: 4px;
+    }
+
+    /* Dual-handle slider styles */
+    .slider-container {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .slider-label {
+      font-weight: 600;
+      font-size: 13px;
+      color: #374151;
+      min-width: 60px;
+    }
+
+    .slider-range {
+      font-size: 12px;
+      color: #6b7280;
+      flex: 1;
+      text-align: center;
+    }
+
+    .slider-remove {
+      padding: 4px 8px;
+      font-size: 18px;
+      color: #9ca3af;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .slider-remove:hover {
+      color: #ef4444;
+    }
+
+    .dual-slider {
+      position: relative;
+      height: 40px;
+      margin: 0 8px;
+    }
+
+    .slider-track {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: #e5e7eb;
+      border-radius: 3px;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .slider-range-fill {
+      position: absolute;
+      top: 0;
+      height: 6px;
+      background: #3b82f6;
+      border-radius: 3px;
+      pointer-events: none;
+    }
+
+    .slider-min, .slider-max {
+      position: absolute;
+      width: 100%;
+      height: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      -webkit-appearance: none;
+      background: transparent;
+      pointer-events: all;
+      cursor: pointer;
+    }
+
+    .slider-min::-webkit-slider-thumb,
+    .slider-max::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #3b82f6;
+      cursor: pointer;
+      border: 2px solid white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .slider-min::-moz-range-thumb,
+    .slider-max::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #3b82f6;
+      cursor: pointer;
+      border: 2px solid white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    /* Table styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      padding: 8px 12px;
+      text-align: left;
+      font-weight: 600;
+      color: #374151;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    th.sortable {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    th.sortable:hover {
+      background: #f3f4f6;
+    }
+
+    th.center {
+      text-align: center;
+    }
+
+    td {
+      border: 1px solid #e5e7eb;
+      padding: 8px 12px;
+    }
+
+    td.number {
+      text-align: center;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 12px;
+    }
+
+    tr:hover {
+      background: #f9fafb;
+    }
+
+    /* Elimination row highlighting */
+    .eliminated-row {
+      background: #fef2f2 !important;
+    }
+
+    .elimination-fail {
+      background: #fee2e2 !important;
+      font-weight: bold;
+    }
+
+    /* Button styles */
+    .btn {
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #2563eb;
+    }
+
+    .btn-secondary {
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .btn-secondary:hover {
+      background: #e5e7eb;
+    }
+
+    .hidden { display: none !important; }
+  </style>
+<% end %>
+
+<div class="container mx-auto px-4 py-8" data-controller="filter">
+
+  <%# === HEADER === %>
+  <div class="mb-8">
+    <h1 class="text-4xl font-bold text-gray-900 mb-2">Golden Deployment</h1>
+    <p class="text-lg text-gray-600 mb-4">Rails 8 Template with All Reusable Patterns</p>
+
+    <div class="flex gap-4 text-sm text-gray-600">
+      <a href="<%= root_path %>" class="text-blue-600 hover:text-blue-800">Home</a>
+      <a href="#" class="text-blue-600 hover:text-blue-800">Deployment Guide</a>
+      <a href="#" class="text-blue-600 hover:text-blue-800">API Docs</a>
+      <a href="https://github.com/zrandles/golden_deployment" class="text-blue-600 hover:text-blue-800" target="_blank">GitHub</a>
+    </div>
+  </div>
+
+  <%# === STATS GRID === %>
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white border border-gray-200 rounded-lg p-4">
+      <div class="text-sm text-gray-500 mb-1">Total Patterns</div>
+      <div class="text-3xl font-bold text-gray-900"><%= @examples.count %></div>
+    </div>
+    <div class="bg-white border border-gray-200 rounded-lg p-4">
+      <div class="text-sm text-gray-500 mb-1">Completed</div>
+      <div class="text-3xl font-bold text-green-600"><%= @examples.where(status: 'completed').count %></div>
+    </div>
+    <div class="bg-white border border-gray-200 rounded-lg p-4">
+      <div class="text-sm text-gray-500 mb-1">In Progress</div>
+      <div class="text-3xl font-bold text-yellow-600"><%= @examples.where(status: 'in_progress').count %></div>
+    </div>
+    <div class="bg-white border border-gray-200 rounded-lg p-4">
+      <div class="text-sm text-gray-500 mb-1">Average Score</div>
+      <div class="text-3xl font-bold text-blue-600"><%= @examples.average(:score)&.round(1) || 0 %></div>
+    </div>
+  </div>
+
+  <%# === FEATURE HIGHLIGHTS === %>
+  <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+    <h2 class="text-xl font-bold text-gray-900 mb-4">What's Included</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <h3 class="font-semibold text-gray-900 mb-2">UI Patterns</h3>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>✅ Advanced table filtering (you're looking at it!)</li>
+          <li>✅ Status & category badges</li>
+          <li>✅ Modal configuration panels</li>
+          <li>✅ Responsive stats grids</li>
+          <li>✅ Sortable table headers</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold text-gray-900 mb-2">Backend Patterns</h3>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>✅ API token authentication</li>
+          <li>✅ Bulk upsert endpoints</li>
+          <li>✅ Service objects</li>
+          <li>✅ Background jobs (Solid Queue)</li>
+          <li>✅ Percentile calculations</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold text-gray-900 mb-2">Data Patterns</h3>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>✅ Seed file best practices</li>
+          <li>✅ Migration safety</li>
+          <li>✅ Database constraints</li>
+          <li>✅ Model validations & enums</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold text-gray-900 mb-2">Deployment Patterns</h3>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>✅ Capistrano deployment</li>
+          <li>✅ Systemd service config</li>
+          <li>✅ Nginx path-based routing</li>
+          <li>✅ Asset precompilation fix</li>
+          <li>✅ Environment credentials</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <%# === FILTER BAR (populated by Stimulus) === %>
+  <div data-filter-target="filterBar" class="hidden"></div>
+
+  <%# === TABLE CONTROLS === %>
+  <div class="flex justify-between items-center mb-4">
+    <div>
+      <span data-filter-target="resultCount" class="text-sm text-gray-600">
+        Showing <%= @examples.count %> of <%= @examples.count %> examples
+      </span>
+    </div>
+    <div class="flex gap-2">
+      <button data-action="click->filter#openModal" class="btn btn-secondary">
+        ⚙️ Configure Columns & Filters
+      </button>
+    </div>
+  </div>
+
+  <%# === ADVANCED TABLE === %>
+  <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+    <div class="overflow-x-auto">
+      <table data-filter-target="table">
+        <thead></thead>
+        <tbody data-filter-target="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <%# === EMBEDDED JSON DATA === %>
+  <script id="examples-data" type="application/json">
+    <%= raw @examples.map { |e|
+      {
+        id: e.id,
+        name: e.name,
+        category: e.category,
+        status: e.status,
+        priority: e.priority,
+        score: e.score,
+        complexity: e.complexity,
+        speed: e.speed,
+        quality: e.quality,
+        average_metrics: e.average_metrics
+      }
+    }.to_json %>
+  </script>
+
+  <script id="percentile-values" type="application/json">
+    <%= raw @percentile_values.to_json %>
+  </script>
+
+  <%# === COLUMN CONFIGURATION MODAL === %>
+  <div data-filter-target="modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="text-xl font-bold text-gray-900">Configure Columns & Filters</h2>
+        <button data-action="click->filter#closeModal" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="text-sm text-gray-600 mb-6">
+          <strong>Hidden:</strong> Not visible in table.
+          <strong>Shown:</strong> Visible without filtering.
+          <strong>Featured:</strong> Visible with active filter/elimination slider.
+        </p>
+
+        <div class="grid grid-cols-3 gap-4">
+          <div class="column-panel">
+            <h3>Hidden (<span id="hidden-count">0</span>)</h3>
+            <div data-filter-target="hiddenList"></div>
+          </div>
+
+          <div class="column-panel">
+            <h3>Shown (<span id="shown-count">0</span>)</h3>
+            <div data-filter-target="shownList"></div>
+          </div>
+
+          <div class="column-panel">
+            <h3>Featured (<span id="featured-count">0</span>)</h3>
+            <div data-filter-target="featuredList"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button data-action="click->filter#resetConfiguration" class="btn btn-secondary">Reset to Defaults</button>
+        <button data-action="click->filter#saveConfiguration" class="btn btn-primary">Save & Apply</button>
+        <button data-action="click->filter#closeModal" class="btn btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+</div>

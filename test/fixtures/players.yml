@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  faction: one
+  name: MyString
+  is_bot: false
+  resources: 1
+  power_level: 1
+  last_active_at: 2025-10-22 16:34:24
+
+two:
+  faction: two
+  name: MyString
+  is_bot: false
+  resources: 1
+  power_level: 1
+  last_active_at: 2025-10-22 16:34:24

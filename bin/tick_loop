@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+# Runs world tick every 5 seconds for fast local testing
+
+require_relative "../config/environment"
+
+puts "Starting world tick loop (every 5 seconds)..."
+puts "Press Ctrl+C to stop"
+
+loop do
+  begin
+    WorldTickService.tick!
+  rescue => e
+    puts "Error during tick: #{e.message}"
+    puts e.backtrace.first(5)
+  end
+
+  sleep 5
+end
