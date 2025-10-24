@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   scope path: '/golden_deployment' do
-    root "dashboard#index"
+    root "examples#index"
+
+    resources :examples, only: [:index, :show]
 
     resources :apps, only: [:index, :show] do
       member do

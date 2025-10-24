@@ -1,0 +1,54 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.3.4
+        bundler-cache: true
+
+    - name: Install dependencies
+      run: bundle install
+
+    - name: Set up database
+      run: |
+        bin/rails db:create RAILS_ENV=test
+        bin/rails db:schema:load RAILS_ENV=test
+
+    - name: Precompile assets
+      run: bin/rails assets:precompile RAILS_ENV=test
+
+    - name: Run tests
+      run: bundle exec rspec
+
+    - name: Upload coverage
+      uses: codecov/codecov-action@v4
+      if: always()
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./coverage/.resultset.json
+        fail_ci_if_error: false
+
+    - name: Check coverage threshold
+      run: |
+        if [ -f coverage/.last_run.json ]; then
+          COVERAGE=$(cat coverage/.last_run.json | grep -o '"result":[^,]*' | grep -o '[0-9.]*')
+          echo "Code coverage: $COVERAGE%"
+          if (( $(echo "$COVERAGE < 80" | bc -l) )); then
+            echo "Coverage is below 80% threshold"
+            exit 1
+          fi
+        fi

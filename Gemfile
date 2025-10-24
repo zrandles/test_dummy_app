@@ -42,6 +42,10 @@ gem "thruster", require: false
 gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
 
 group :development, :test do
+  # Testing framework
+  gem "rspec-rails", "~> 7.0"
+  gem "factory_bot_rails", "~> 6.4"
+  gem "faker", "~> 3.5"
 
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "brakeman", require: false
@@ -66,6 +70,8 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  gem "shoulda-matchers", "~> 6.0"
+  gem "database_cleaner-active_record", "~> 2.2"
 end
 
 # Deployment gems
