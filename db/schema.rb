@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_23_141458) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_24_183302) do
   create_table "actions", force: :cascade do |t|
     t.integer "player_id", null: false
     t.string "action_type"
@@ -21,6 +21,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_23_141458) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["player_id"], name: "index_actions_on_player_id"
+  end
+
+  create_table "apps", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "path", null: false
+    t.datetime "last_scanned_at"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["last_scanned_at"], name: "index_apps_on_last_scanned_at"
+    t.index ["name"], name: "index_apps_on_name", unique: true
+    t.index ["status"], name: "index_apps_on_status"
   end
 
   create_table "examples", force: :cascade do |t|
@@ -52,6 +64,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_23_141458) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "metric_summaries", force: :cascade do |t|
+    t.integer "app_id", null: false
+    t.string "scan_type", null: false
+    t.integer "total_issues", default: 0
+    t.integer "high_severity", default: 0
+    t.integer "medium_severity", default: 0
+    t.integer "low_severity", default: 0
+    t.float "average_score"
+    t.datetime "scanned_at"
+    t.text "metadata"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["app_id", "scan_type"], name: "index_metric_summaries_on_app_id_and_scan_type"
+    t.index ["app_id"], name: "index_metric_summaries_on_app_id"
+    t.index ["scanned_at"], name: "index_metric_summaries_on_scanned_at"
+  end
+
   create_table "player_positions", force: :cascade do |t|
     t.integer "player_id", null: false
     t.integer "territory_id", null: false
@@ -74,6 +103,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_23_141458) do
     t.index ["faction_id"], name: "index_players_on_faction_id"
   end
 
+  create_table "quality_scans", force: :cascade do |t|
+    t.integer "app_id", null: false
+    t.string "scan_type", null: false
+    t.string "severity"
+    t.text "message"
+    t.string "file_path"
+    t.integer "line_number"
+    t.float "metric_value"
+    t.datetime "scanned_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["app_id", "scan_type"], name: "index_quality_scans_on_app_id_and_scan_type"
+    t.index ["app_id"], name: "index_quality_scans_on_app_id"
+    t.index ["scanned_at"], name: "index_quality_scans_on_scanned_at"
+    t.index ["severity"], name: "index_quality_scans_on_severity"
+  end
+
   create_table "territories", force: :cascade do |t|
     t.integer "x"
     t.integer "y"
@@ -86,8 +132,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_23_141458) do
   end
 
   add_foreign_key "actions", "players"
+  add_foreign_key "metric_summaries", "apps"
   add_foreign_key "player_positions", "players"
   add_foreign_key "player_positions", "territories"
   add_foreign_key "players", "factions"
+  add_foreign_key "quality_scans", "apps"
   add_foreign_key "territories", "factions"
 end

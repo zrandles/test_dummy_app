@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  path: MyString
+  last_scanned_at: 2025-10-24 11:32:54
+  status: MyString
+
+two:
+  name: MyString
+  path: MyString
+  last_scanned_at: 2025-10-24 11:32:54
+  status: MyString

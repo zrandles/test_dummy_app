@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  app: one
+  scan_type: MyString
+  total_issues: 1
+  high_severity: 1
+  medium_severity: 1
+  low_severity: 1
+  average_score: 1.5
+  scanned_at: 2025-10-24 11:33:02
+  metadata: MyText
+
+two:
+  app: two
+  scan_type: MyString
+  total_issues: 1
+  high_severity: 1
+  medium_severity: 1
+  low_severity: 1
+  average_score: 1.5
+  scanned_at: 2025-10-24 11:33:02
+  metadata: MyText

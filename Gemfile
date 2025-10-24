@@ -46,6 +46,13 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # Code quality gems
+  gem "reek", require: false          # Code smell detection
+  gem "flog", require: false          # ABC complexity metric
+  gem "flay", require: false          # Structural similarity detection
+  gem "simplecov", require: false     # Test coverage
+  gem "rubycritic", require: false    # Code quality reporting
 end
 
 group :development do

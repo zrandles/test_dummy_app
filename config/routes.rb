@@ -1,17 +1,18 @@
 Rails.application.routes.draw do
   scope path: '/code_quality' do
-    root "examples#index"
+    root "dashboard#index"
 
-    resources :examples, only: [:index, :show]
-
-    # API endpoints with authentication
-    namespace :api do
-      resources :examples, only: [:index] do
-        collection do
-          post :bulk_upsert
-        end
+    resources :apps, only: [:index, :show] do
+      member do
+        post :scan
+        post :scan_all
+      end
+      collection do
+        post :discover
       end
     end
+
+    resources :quality_scans, only: [:index]
 
     get "up" => "rails/health#show", as: :rails_health_check
   end

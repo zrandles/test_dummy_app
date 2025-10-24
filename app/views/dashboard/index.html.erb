@@ -1,0 +1,93 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Code Quality Dashboard</h1>
+    <p class="mt-2 text-gray-600">Monitor code quality across all Rails apps</p>
+  </div>
+
+  <!-- Summary Stats -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="text-sm font-medium text-gray-500">Total Apps</div>
+      <div class="mt-2 text-3xl font-bold text-gray-900"><%= @total_apps %></div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="text-sm font-medium text-gray-500">Critical Apps</div>
+      <div class="mt-2 text-3xl font-bold text-red-600"><%= @critical_apps %></div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="text-sm font-medium text-gray-500">Warning Apps</div>
+      <div class="mt-2 text-3xl font-bold text-yellow-600"><%= @warning_apps %></div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="text-sm font-medium text-gray-500">Total Issues</div>
+      <div class="mt-2 text-3xl font-bold text-gray-900"><%= @total_issues %></div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="mb-6 flex gap-4">
+    <%= button_to "Discover Apps", discover_apps_path, method: :post, class: "bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" %>
+    <%= link_to "View All Apps", apps_path, class: "bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700" %>
+  </div>
+
+  <!-- Apps Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @apps.each do |app| %>
+      <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
+        <div class="p-6">
+          <div class="flex items-start justify-between">
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900"><%= app.name %></h3>
+              <% if app.last_scanned_at %>
+                <p class="text-sm text-gray-500 mt-1">
+                  Last scanned <%= time_ago_in_words(app.last_scanned_at) %> ago
+                </p>
+              <% else %>
+                <p class="text-sm text-gray-500 mt-1">Never scanned</p>
+              <% end %>
+            </div>
+            <% if app.status %>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= status_badge_class(app.status) %>">
+                <%= app.status %>
+              </span>
+            <% end %>
+          </div>
+
+          <% summaries = app.latest_summaries %>
+          <% if summaries.any? %>
+            <div class="mt-4 space-y-2">
+              <% summaries.each do |scan_type, summary| %>
+                <div class="flex items-center justify-between text-sm">
+                  <span class="text-gray-600"><%= scan_type.titleize %></span>
+                  <div class="flex items-center gap-2">
+                    <% if summary.high_severity > 0 %>
+                      <span class="text-red-600 font-medium"><%= summary.high_severity %> critical</span>
+                    <% elsif summary.medium_severity > 0 %>
+                      <span class="text-yellow-600 font-medium"><%= summary.medium_severity %> warnings</span>
+                    <% else %>
+                      <span class="text-green-600 font-medium">✓</span>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+
+          <div class="mt-4 flex gap-2">
+            <%= link_to "View Details", app_path(app), class: "text-blue-600 hover:text-blue-800 text-sm font-medium" %>
+            <%= button_to "Scan Now", scan_app_path(app), method: :post, class: "text-gray-600 hover:text-gray-800 text-sm font-medium" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @apps.empty? %>
+    <div class="bg-white rounded-lg shadow p-12 text-center">
+      <p class="text-gray-500 text-lg">No apps found. Click "Discover Apps" to scan for Rails applications.</p>
+    </div>
+  <% end %>
+</div>
