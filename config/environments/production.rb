@@ -3,12 +3,12 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  # CRITICAL: Set relative URL root for path-based routing (scoped under /golden_deployment)
-  # This tells Rails to prefix all asset paths with /golden_deployment
-  config.relative_url_root = "/golden_deployment"
+  # CRITICAL: Set relative URL root for path-based routing (scoped under /code_quality)
+  # This tells Rails to prefix all asset paths with /code_quality
+  config.relative_url_root = "/code_quality"
 
   # Also set action controller's relative_url_root for routing
-  config.action_controller.relative_url_root = "/golden_deployment"
+  config.action_controller.relative_url_root = "/code_quality"
 
   # Code is not reloaded between requests.
   config.enable_reloading = false

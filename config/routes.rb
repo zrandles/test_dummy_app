@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  scope path: '/golden_deployment' do
+  scope path: '/code_quality' do
     root "examples#index"
 
     resources :examples, only: [:index, :show]
