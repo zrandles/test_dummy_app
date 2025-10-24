@@ -1,5 +1,5 @@
-app_dir = "/home/zac/code_quality/current"
-shared_dir = "/home/zac/code_quality/shared"
+app_dir = "/home/zac/golden_deployment/current"
+shared_dir = "/home/zac/golden_deployment/shared"
 
 # Set up socket location
 bind "unix://#{shared_dir}/tmp/sockets/puma.sock"
