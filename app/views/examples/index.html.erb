@@ -372,10 +372,16 @@
 
   <%# === TABLE CONTROLS === %>
   <div class="flex justify-between items-center mb-4">
-    <div>
+    <div class="flex items-center gap-4">
       <span data-filter-target="resultCount" class="text-sm text-gray-600">
         Showing <%= @examples.count %> of <%= @examples.count %> examples
       </span>
+      <input type="text"
+             placeholder="Search by name..."
+             data-filter-target="searchInput"
+             data-action="input->filter#handleSearch"
+             class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+             style="min-width: 250px;">
     </div>
     <div class="flex gap-2">
       <button data-action="click->filter#openModal" class="btn btn-secondary">

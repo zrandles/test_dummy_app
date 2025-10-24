@@ -14,7 +14,7 @@ import { Controller } from "@hotwired/stimulus"
  * This is production-tested code used for filtering 70+ columns of cattle data.
  */
 export default class extends Controller {
-  static targets = ["modal", "filterBar", "table", "tbody", "resultCount", "hiddenList", "shownList", "featuredList"]
+  static targets = ["modal", "filterBar", "table", "tbody", "resultCount", "hiddenList", "shownList", "featuredList", "searchInput"]
   static values = {
     columns: Array,
     percentiles: Object
@@ -22,6 +22,7 @@ export default class extends Controller {
 
   connect() {
     console.log('Filter controller connected!')
+    this.searchTerm = ''
     this.loadExamples()
     this.loadPercentileValues()
     this.initializeColumns()  // Initialize columns first
@@ -561,16 +562,26 @@ export default class extends Controller {
   }
 
   /**
+   * Handle search input
+   */
+  handleSearch(event) {
+    this.searchTerm = event.target.value.toLowerCase().trim()
+    this.applyFilters()
+  }
+
+  /**
    * Apply all active filters to table rows
    *
-   * Two-pass system:
+   * Three-pass system:
+   * 0. Search: Hide rows that don't match search term
    * 1. Filter mode: Hide rows that don't match
    * 2. Elimination mode: Highlight failing cells in visible rows
    */
   applyFilters() {
     const featuredCols = Object.keys(this.featuredColumns)
 
-    if (featuredCols.length === 0) {
+    // Check if we have no filters or search
+    if (featuredCols.length === 0 && !this.searchTerm) {
       // Show all rows, remove all highlighting
       this.allRows.forEach(row => {
         row.style.display = ''
@@ -600,6 +611,15 @@ export default class extends Controller {
       // Clear previous elimination highlighting
       row.classList.remove('eliminated-row')
       Array.from(row.cells).forEach(cell => cell.classList.remove('elimination-fail'))
+
+      // PASS 0: Check search term (if present)
+      if (this.searchTerm) {
+        const rowText = Array.from(row.cells).map(cell => cell.textContent.toLowerCase()).join(' ')
+        if (!rowText.includes(this.searchTerm)) {
+          row.style.display = 'none'
+          return
+        }
+      }
 
       // FIRST PASS: Check filter-mode columns (hide if fails)
       let passesFilters = true
