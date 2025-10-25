@@ -4,6 +4,8 @@ Rails.application.routes.draw do
 
     resources :examples, only: [:index, :show]
 
+    get "dashboard" => "dashboard#index", as: :dashboard
+
     resources :apps, only: [:index, :show] do
       member do
         post :scan
