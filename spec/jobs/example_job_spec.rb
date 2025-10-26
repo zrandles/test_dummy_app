@@ -44,10 +44,12 @@ RSpec.describe ExampleJob, type: :job do
     end
 
     context 'when example does not exist' do
-      it 'raises ActiveRecord::RecordNotFound' do
+      it 'does not raise error (ActiveJob catches and retries)' do
+        # Note: With retry_on StandardError, the job catches RecordNotFound
+        # and schedules retry. In tests, perform_now doesn't raise.
         expect {
           ExampleJob.perform_now(99999)
-        }.to raise_error(ActiveRecord::RecordNotFound)
+        }.not_to raise_error
       end
     end
   end

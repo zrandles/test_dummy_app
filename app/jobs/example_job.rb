@@ -14,7 +14,7 @@ class ExampleJob < ApplicationJob
   queue_as :default
 
   # Retry failed jobs up to 5 times with exponential backoff
-  retry_on StandardError, wait: :exponentially_longer_with_jitter, attempts: 5
+  retry_on StandardError, wait: ->(executions) { executions * 5 }, attempts: 5
 
   # Example: Process a single example (one-time job)
   #
