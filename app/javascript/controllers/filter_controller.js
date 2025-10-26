@@ -842,9 +842,18 @@ window.sortTable = function(columnIndex) {
   const currentSort = header.dataset.sort || ''
   const newSort = currentSort === 'asc' ? 'desc' : 'asc'
 
-  // Clear all header sorts
-  headers.forEach(th => th.dataset.sort = '')
+  // Clear all header sorts and indicators
+  headers.forEach(th => {
+    th.dataset.sort = ''
+    // Remove any existing sort indicators
+    const text = th.textContent.replace(/ [▲▼]$/, '')
+    th.textContent = text
+  })
+
+  // Set new sort and add indicator
   header.dataset.sort = newSort
+  const headerText = header.textContent.replace(/ [▲▼]$/, '')
+  header.textContent = headerText + (newSort === 'asc' ? ' ▲' : ' ▼')
 
   // Sort rows
   rows.sort((a, b) => {
