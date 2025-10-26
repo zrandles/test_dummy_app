@@ -160,11 +160,11 @@ RSpec.describe ExamplesHelper, type: :helper do
       {
         'score' => {
           0 => 10.0,
-          25 => 25.0,
-          50 => 50.0,
-          75 => 75.0,
-          90 => 90.0,
-          95 => 95.0,
+          25 => 40.0,
+          50 => 60.0,
+          75 => 80.0,
+          90 => 92.0,
+          95 => 96.0,
           100 => 100.0
         }
       }
@@ -183,22 +183,22 @@ RSpec.describe ExamplesHelper, type: :helper do
     end
 
     it 'returns bold green highlight for >= 95th percentile' do
-      result = helper.percentile_class(96.0, 'score', percentiles)
+      result = helper.percentile_class(97.0, 'score', percentiles)  # Above 96.0 (95th percentile)
       expect(result).to eq('bg-green-100 font-bold')
     end
 
     it 'returns green highlight for >= 90th percentile but < 95th' do
-      result = helper.percentile_class(92.0, 'score', percentiles)
+      result = helper.percentile_class(93.0, 'score', percentiles)  # Between 92.0 (90th) and 96.0 (95th)
       expect(result).to eq('bg-green-50')
     end
 
     it 'returns yellow highlight for >= 75th percentile but < 90th' do
-      result = helper.percentile_class(80.0, 'score', percentiles)
+      result = helper.percentile_class(81.0, 'score', percentiles)  # Just above 80.0 (75th), below 92.0 (90th)
       expect(result).to eq('bg-yellow-50')
     end
 
     it 'returns empty string for < 75th percentile' do
-      result = helper.percentile_class(50.0, 'score', percentiles)
+      result = helper.percentile_class(65.0, 'score', percentiles)  # Below 80.0 (75th percentile)
       expect(result).to eq('')
     end
   end
@@ -215,9 +215,9 @@ RSpec.describe ExamplesHelper, type: :helper do
     end
 
     it 'returns correct percentile for value in range' do
-      # Value 30 should fall around 25th percentile (first value <= 30 is at 25%)
+      # Value 30 is > 25.0 (25th percentile threshold), so returns 25
       result = helper.send(:calculate_percentile, 30.0, percentile_hash)
-      expect(result).to eq(50)
+      expect(result).to eq(25)
     end
 
     it 'returns 0 for value below all percentiles' do
@@ -231,8 +231,10 @@ RSpec.describe ExamplesHelper, type: :helper do
     end
 
     it 'handles exact matches' do
+      # Value 50.0 equals the 50th percentile threshold
+      # Since it's not GREATER than 50, it falls to the previous percentile (25)
       result = helper.send(:calculate_percentile, 50.0, percentile_hash)
-      expect(result).to eq(50)
+      expect(result).to eq(25)
     end
   end
 end

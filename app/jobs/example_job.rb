@@ -14,7 +14,7 @@ class ExampleJob < ApplicationJob
   queue_as :default
 
   # Retry failed jobs up to 5 times with exponential backoff
-  retry_on StandardError, wait: :exponentially_longer, attempts: 5
+  retry_on StandardError, wait: :exponentially_longer_with_jitter, attempts: 5
 
   # Example: Process a single example (one-time job)
   #
@@ -117,7 +117,7 @@ class ExampleWithErrorHandlingJob < ApplicationJob
 
   # Custom retry logic for specific errors
   retry_on ActiveRecord::RecordNotFound, wait: 5.seconds, attempts: 3
-  retry_on StandardError, wait: :exponentially_longer, attempts: 5
+  retry_on StandardError, wait: :exponentially_longer_with_jitter, attempts: 5
 
   # Discard job if specific error occurs (don't retry)
   discard_on ActiveJob::DeserializationError

@@ -118,10 +118,15 @@ module ExamplesHelper
   # Calculate percentile rank for a value
   def calculate_percentile(value, percentile_hash)
     # percentile_hash is { 0 => val, 5 => val, ..., 100 => val }
-    # Find which percentile the value falls into
-    percentile_hash.each do |p, v|
-      return p if value <= v
+    # Find the highest percentile where value > threshold
+    # Example: if value=93, and 90=>92, 95=>96, then value > 92 so percentile rank is 90
+    result = 0
+    percentile_hash.sort.reverse.each do |p, v|
+      if value > v
+        result = p
+        break
+      end
     end
-    100  # Value is above 100th percentile
+    result
   end
 end
