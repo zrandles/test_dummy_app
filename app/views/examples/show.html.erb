@@ -1,4 +1,72 @@
-<div>
-  <h1 class="font-bold text-4xl">Examples#show</h1>
-  <p>Find me in app/views/examples/show.html.erb</p>
+<div class="max-w-4xl mx-auto p-6">
+  <h1 class="font-bold text-4xl mb-6"><%= @example.name %></h1>
+
+  <div class="bg-white shadow rounded-lg p-6">
+    <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+      <div>
+        <dt class="text-sm font-medium text-gray-500">Status</dt>
+        <dd class="mt-1 text-sm text-gray-900"><%= @example.status %></dd>
+      </div>
+
+      <% if @example.category.present? %>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Category</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @example.category %></dd>
+        </div>
+      <% end %>
+
+      <% if @example.priority.present? %>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Priority</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @example.priority %></dd>
+        </div>
+      <% end %>
+
+      <% if @example.score.present? %>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Score</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @example.score %></dd>
+        </div>
+      <% end %>
+
+      <% if @example.complexity.present? %>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Complexity</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @example.complexity %></dd>
+        </div>
+      <% end %>
+
+      <% if @example.speed.present? %>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Speed</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @example.speed %></dd>
+        </div>
+      <% end %>
+
+      <% if @example.quality.present? %>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Quality</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @example.quality %></dd>
+        </div>
+      <% end %>
+
+      <% if @example.average_metrics.present? %>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Average Metrics</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @example.average_metrics %></dd>
+        </div>
+      <% end %>
+    </dl>
+
+    <% if @example.description.present? %>
+      <div class="mt-6 pt-6 border-t border-gray-200">
+        <dt class="text-sm font-medium text-gray-500 mb-2">Description</dt>
+        <dd class="text-sm text-gray-900"><%= simple_format(@example.description) %></dd>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mt-6">
+    <%= link_to 'Back to Examples', examples_path, class: 'text-blue-600 hover:text-blue-800' %>
+  </div>
 </div>

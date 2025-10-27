@@ -1,7 +1,7 @@
 {
   "RSpec": {
     "coverage": {
-      "/Users/zac/zac_ecosystem/apps/golden_deployment/app/helpers/application_helper.rb": {
+      "/Users/zac/zac_ecosystem/apps/test_dummy_app/app/helpers/application_helper.rb": {
         "lines": [
           1,
           1,
@@ -32,7 +32,7 @@
           null
         ]
       },
-      "/Users/zac/zac_ecosystem/apps/golden_deployment/app/helpers/examples_helper.rb": {
+      "/Users/zac/zac_ecosystem/apps/test_dummy_app/app/helpers/examples_helper.rb": {
         "lines": [
           1,
           null,
@@ -168,13 +168,13 @@
           null
         ]
       },
-      "/Users/zac/zac_ecosystem/apps/golden_deployment/app/helpers/game_helper.rb": {
+      "/Users/zac/zac_ecosystem/apps/test_dummy_app/app/helpers/game_helper.rb": {
         "lines": [
           1,
           null
         ]
       },
-      "/Users/zac/zac_ecosystem/apps/golden_deployment/app/jobs/example_job.rb": {
+      "/Users/zac/zac_ecosystem/apps/test_dummy_app/app/jobs/example_job.rb": {
         "lines": [
           null,
           null,
@@ -322,7 +322,7 @@
           null
         ]
       },
-      "/Users/zac/zac_ecosystem/apps/golden_deployment/app/jobs/application_job.rb": {
+      "/Users/zac/zac_ecosystem/apps/test_dummy_app/app/jobs/application_job.rb": {
         "lines": [
           1,
           null,
@@ -333,7 +333,7 @@
           null
         ]
       },
-      "/Users/zac/zac_ecosystem/apps/golden_deployment/app/models/example.rb": {
+      "/Users/zac/zac_ecosystem/apps/test_dummy_app/app/models/example.rb": {
         "lines": [
           1,
           null,
@@ -351,9 +351,9 @@
           null,
           null,
           1,
-          731,
-          731,
-          730,
+          42,
+          42,
+          5,
           null,
           null,
           null,
@@ -367,14 +367,14 @@
           null
         ]
       },
-      "/Users/zac/zac_ecosystem/apps/golden_deployment/app/models/application_record.rb": {
+      "/Users/zac/zac_ecosystem/apps/test_dummy_app/app/models/application_record.rb": {
         "lines": [
           1,
           1,
           null
         ]
       },
-      "/Users/zac/zac_ecosystem/apps/golden_deployment/app/services/example_service.rb": {
+      "/Users/zac/zac_ecosystem/apps/test_dummy_app/app/services/example_service.rb": {
         "lines": [
           null,
           null,
@@ -520,13 +520,13 @@
           null
         ]
       },
-      "/Users/zac/zac_ecosystem/apps/golden_deployment/app/controllers/examples_controller.rb": {
+      "/Users/zac/zac_ecosystem/apps/test_dummy_app/app/controllers/examples_controller.rb": {
         "lines": [
           1,
           null,
           1,
-          57,
-          57,
+          10,
+          10,
           null,
           null,
           null,
@@ -549,44 +549,52 @@
           null,
           null,
           null,
-          57,
+          10,
           null,
           null,
-          57,
+          10,
           null,
-          57,
+          10,
           null,
-          285,
-          null,
-          null,
-          null,
-          null,
-          285,
+          50,
           null,
           null,
           null,
-          279,
-          279,
           null,
-          5859,
-          5859,
+          50,
           null,
           null,
           null,
-          57,
+          11,
+          11,
+          null,
+          231,
+          231,
+          null,
+          null,
+          null,
+          10,
           null,
           null
         ]
       },
-      "/Users/zac/zac_ecosystem/apps/golden_deployment/app/controllers/application_controller.rb": {
+      "/Users/zac/zac_ecosystem/apps/test_dummy_app/app/controllers/application_controller.rb": {
         "lines": [
           1,
           null,
           1,
+          null,
+          1,
+          null,
+          1,
+          null,
+          1,
+          1,
+          null,
           null
         ]
       },
-      "/Users/zac/zac_ecosystem/apps/golden_deployment/app/controllers/api/examples_controller.rb": {
+      "/Users/zac/zac_ecosystem/apps/test_dummy_app/app/controllers/api/examples_controller.rb": {
         "lines": [
           0,
           0,
@@ -772,7 +780,7 @@
         ],
         "branches": {}
       },
-      "/Users/zac/zac_ecosystem/apps/golden_deployment/app/mailers/application_mailer.rb": {
+      "/Users/zac/zac_ecosystem/apps/test_dummy_app/app/mailers/application_mailer.rb": {
         "lines": [
           0,
           0,
@@ -782,6 +790,6 @@
         "branches": {}
       }
     },
-    "timestamp": 1761441287
+    "timestamp": 1761535042
   }
 }
