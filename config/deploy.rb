@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 # config/deploy.rb
-set :application, 'golden_deployment'
-set :repo_url, 'git@github.com:zrandles/golden_deployment.git'
+set :application, 'test_dummy_app'
+set :repo_url, 'git@github.com:zrandles/test_dummy_app.git'
 set :branch, 'main'
 set :deploy_to, "/home/zac/#{fetch(:application)}"
 set :keep_releases, 5
@@ -63,7 +63,7 @@ namespace :deploy do
   desc 'Restart Puma server'
   task :restart_puma_sudo do
     on roles(:app) do
-      execute :sudo, :systemctl, :restart, 'golden_deployment.service'
+      execute :sudo, :systemctl, :restart, 'test_dummy_app.service'
     end
   end
   desc 'Generate binstubs'
