@@ -27,7 +27,7 @@ RSpec.describe 'Filter Controller', type: :system, js: true do
   end
 
   before do
-    visit '/golden_deployment/examples'
+    visit examples_path
     # Wait for page to fully load
     expect(page).to have_content('Golden Deployment')
   end
@@ -405,7 +405,7 @@ RSpec.describe 'Filter Controller', type: :system, js: true do
       expect(page).to have_content('Score')
 
       # Reload page
-      visit '/golden_deployment/examples'
+      visit examples_path
       sleep 1  # Give JavaScript time to load
 
       # Filter should still be active
@@ -485,7 +485,7 @@ RSpec.describe 'Filter Controller', type: :system, js: true do
     it 'handles examples with nil values gracefully' do
       create(:example, name: 'Nil Values Example', score: nil, priority: nil, complexity: nil)
 
-      visit '/golden_deployment/examples'
+      visit examples_path
 
       expect(page).to have_content('Nil Values Example')
       expect(page).to have_content('Showing 10 of 10 examples')
@@ -494,7 +494,7 @@ RSpec.describe 'Filter Controller', type: :system, js: true do
     it 'works with zero examples' do
       Example.destroy_all
 
-      visit '/golden_deployment/examples'
+      visit examples_path
 
       expect(page).to have_content('0 examples')
       expect(page).not_to have_css('.slider-container')
@@ -505,7 +505,7 @@ RSpec.describe 'Filter Controller', type: :system, js: true do
       Example.destroy_all
       create_list(:example, 5, score: nil)
 
-      visit '/golden_deployment/examples'
+      visit examples_path
 
       # Should not crash
       expect(page).to have_content('Showing 5 of 5 examples')
@@ -514,7 +514,7 @@ RSpec.describe 'Filter Controller', type: :system, js: true do
 
   describe 'regression test for high_score_basketball incident' do
     it 'loads correct data model (examples not other app data)' do
-      visit '/golden_deployment/examples'
+      visit examples_path
 
       # Should find script tag with correct ID
       expect(page).to have_css('script#examples-data', visible: false)
@@ -532,7 +532,7 @@ RSpec.describe 'Filter Controller', type: :system, js: true do
     end
 
     it 'displays example names in table, not code quality metrics' do
-      visit '/golden_deployment/examples'
+      visit examples_path
 
       # Should show actual example names
       expect(page).to have_content('Low Score 1')
